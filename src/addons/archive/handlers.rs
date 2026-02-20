@@ -1,13 +1,13 @@
-use super::ArchiveState;
 use crate::app::AppState;
 use axum::{
-    Extension,
     extract::{Json, State},
     response::IntoResponse,
+    Extension,
 };
+use super::ArchiveState;
 use serde::{Deserialize, Serialize};
 use toml_edit::{DocumentMut, value};
-use tracing::{error, info};
+use tracing::{info, error};
 
 #[derive(Serialize)]
 pub struct ArchiveFile {
@@ -36,9 +36,7 @@ pub async fn ui_index(
     #[cfg(feature = "console")]
     {
         if let Some(console) = &state.console {
-            let archives = list_archive_files(&state.core.storage)
-                .await
-                .unwrap_or_default();
+            let archives = list_archive_files(&state.core.storage).await.unwrap_or_default();
             let config = archive_state.config.read().unwrap().clone();
             return console.render(
                 "archive/archive_index.html",
@@ -50,7 +48,7 @@ pub async fn ui_index(
             );
         }
     }
-
+    
     #[cfg(feature = "console")]
     return axum::response::Html("Console not initialized".to_string()).into_response();
 
@@ -59,9 +57,7 @@ pub async fn ui_index(
 }
 
 pub async fn list_archives(State(state): State<AppState>) -> impl IntoResponse {
-    let archives = list_archive_files(&state.core.storage)
-        .await
-        .unwrap_or_default();
+    let archives = list_archive_files(&state.core.storage).await.unwrap_or_default();
     Json(archives)
 }
 
@@ -71,11 +67,8 @@ pub async fn delete_archive(
 ) -> impl IntoResponse {
     let path = format!("archive/{}", payload.filename);
     // Security check: ensure no path traversal
-    if payload.filename.contains("..")
-        || payload.filename.contains("/")
-        || payload.filename.contains("\\")
-    {
-        return Json(serde_json::json!({"success": false, "error": "Invalid filename"}));
+    if payload.filename.contains("..") || payload.filename.contains("/") || payload.filename.contains("\\") {
+         return Json(serde_json::json!({"success": false, "error": "Invalid filename"}));
     }
 
     if let Err(e) = state.core.storage.delete(&path).await {
@@ -124,7 +117,7 @@ pub async fn update_config(
                 retention_days: payload.retention_days,
             });
             Json(serde_json::json!({"success": true}))
-        }
+        },
         Err(e) => {
             error!("Failed to update archive config: {}", e);
             Json(serde_json::json!({"success": false, "error": e.to_string()}))
