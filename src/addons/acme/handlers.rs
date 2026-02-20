@@ -111,6 +111,9 @@ pub async fn request_cert(
     let enable_https = payload.enable_https;
     let enable_sip_tls = payload.enable_sip_tls;
 
+    // Get ACME URL from config - adjust based on your actual config structure
+    let acme_url = state.acme_url.clone()
+        .unwrap_or_else(|| "https://acme-v02.api.letsencrypt.org/directory".to_string());
     info!(
         "Received certificate request for domain: {}, email: {}",
         domain, email
@@ -129,6 +132,7 @@ pub async fn request_cert(
             email,
             enable_https,
             enable_sip_tls,
+            acme_url,
             acme_state_clone.clone(),
             state,
         )
@@ -148,6 +152,7 @@ async fn process_acme(
     email: String,
     enable_https: bool,
     enable_sip_tls: bool,
+    acme_url: String,
     acme_state: AcmeState,
     app_state: AppState,
 ) -> anyhow::Result<()> {
@@ -161,8 +166,6 @@ async fn process_acme(
         *status = AcmeStatus::Running(format!("Creating account for {}", email));
     }
 
-    let url = "https://acme-v02.api.letsencrypt.org/directory";
-
     let (account, _) = Account::builder()?
         .create(
             &NewAccount {
@@ -170,7 +173,7 @@ async fn process_acme(
                 terms_of_service_agreed: true,
                 only_return_existing: false,
             },
-            url.to_string(),
+            acme_url,
             None,
         )
         .await?;
