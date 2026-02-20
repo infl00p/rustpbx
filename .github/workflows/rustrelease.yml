@@ -31,7 +31,6 @@ jobs:
 
       - name: Build Binaries
         run: |
-          apt-get update && apt-get -y install libssl-dev --no-install-recommends
           cross build --release --target x86_64-unknown-linux-gnu --features cross
           cross build --release --target aarch64-unknown-linux-gnu --features cross
           mkdir -p bin/amd64 bin/arm64
