@@ -4,6 +4,7 @@ use axum::{
     Extension,
     extract::{Json, Path, Query, State},
     response::IntoResponse,
+    Extension,
 };
 use chrono::NaiveDate;
 use sea_orm::{ColumnTrait, EntityTrait, PaginatorTrait, QueryFilter};
@@ -59,7 +60,7 @@ pub async fn ui_index(
             );
         }
     }
-
+    
     #[cfg(feature = "console")]
     return axum::response::Html("Console not initialized".to_string()).into_response();
 
@@ -78,11 +79,8 @@ pub async fn delete_archive(
     Json(payload): Json<DeleteArchivePayload>,
 ) -> impl IntoResponse {
     // Security check: ensure no path traversal
-    if payload.filename.contains("..")
-        || payload.filename.contains("/")
-        || payload.filename.contains("\\")
-    {
-        return Json(serde_json::json!({"success": false, "error": "Invalid filename"}));
+    if payload.filename.contains("..") || payload.filename.contains("/") || payload.filename.contains("\\") {
+         return Json(serde_json::json!({"success": false, "error": "Invalid filename"}));
     }
 
     let archive_dir = state.config().archive_dir();

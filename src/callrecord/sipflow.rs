@@ -21,7 +21,12 @@ impl SipFlow {
         self.inner.backend.clone()
     }
 
-    pub fn record_sip(&self, is_outgoing: bool, msg: &SipMessage, addr: Option<&SipAddr>) {
+    pub fn record_sip(
+        &self,
+        is_outgoing: bool,
+        msg: &SipMessage,
+        addr: Option<&SipAddr>,
+    ) {
         if let Some(backend) = &self.inner.backend {
             if let Ok(id) = match msg {
                 rsip::SipMessage::Request(req) => req.call_id_header(),
