@@ -1,4 +1,4 @@
-pub acme: Option<AcmeConfig>pub acme: Option<AcmeConfig>pub acme: Option<AcmeConfig>pub acme: Option<AcmeConfig>pub acme: Option<AcmeConfig>use super::{AcmeState, AcmeStatus};
+use super::{AcmeState, AcmeStatus};
 use crate::app::AppState;
 use axum::{
     Extension,
