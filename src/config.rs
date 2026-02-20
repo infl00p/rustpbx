@@ -210,6 +210,7 @@ pub struct Config {
     #[cfg(feature = "commerce")]
     #[serde(default)]
     pub licenses: Option<LicenseConfig>,
+    pub acme: Option<AcmeConfig>,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -569,6 +570,11 @@ pub struct LocatorWebhookConfig {
     pub timeout_ms: Option<u64>,
 }
 
+#[derive(Debug, Clone, Deserialize, Serialize, Default)]
+pub struct AcmeConfig {
+    pub acme_url: Option<String>,
+}
+
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct ProxyConfig {
     pub modules: Option<Vec<String>>,
@@ -883,6 +889,7 @@ impl Default for Config {
             demo_mode: false,
             storage: None,
             addons: HashMap::new(),
+            acme: None,
             sipflow: None,
             metrics: None,
             enterprise_auth: None,
