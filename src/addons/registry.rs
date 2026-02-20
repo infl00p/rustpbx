@@ -182,27 +182,6 @@ impl AddonRegistry {
             .map(|a| a.as_ref())
     }
 
-    pub async fn authenticate_all(
-        &self,
-        state: AppState,
-        identifier: &str,
-        password: &str,
-    ) -> anyhow::Result<Option<crate::models::user::Model>> {
-        let config = state.config();
-        for addon in &self.addons {
-            if !self.is_enabled(addon.id(), config) {
-                continue;
-            }
-            if let Some(user) = addon
-                .authenticate(state.clone(), identifier, password)
-                .await?
-            {
-                return Ok(Some(user));
-            }
-        }
-        Ok(None)
-    }
-
     pub fn apply_proxy_server_hooks(
         &self,
         mut builder: crate::proxy::server::SipServerBuilder,
