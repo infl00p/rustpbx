@@ -1,4 +1,4 @@
-use super::{AcmeState, AcmeStatus};
+pub acme: Option<AcmeConfig>pub acme: Option<AcmeConfig>pub acme: Option<AcmeConfig>pub acme: Option<AcmeConfig>pub acme: Option<AcmeConfig>use super::{AcmeState, AcmeStatus};
 use crate::app::AppState;
 use axum::{
     Extension,
@@ -112,7 +112,8 @@ pub async fn request_cert(
     let enable_sip_tls = payload.enable_sip_tls;
 
     // Get ACME URL from config - adjust based on your actual config structure
-    let acme_url = state.acme_url.clone()
+    let acme_url = state.config().acme.as_ref()
+        .and_then(|a| a.acme_url.clone())
         .unwrap_or_else(|| "https://acme-v02.api.letsencrypt.org/directory".to_string());
     info!(
         "Received certificate request for domain: {}, email: {}",
