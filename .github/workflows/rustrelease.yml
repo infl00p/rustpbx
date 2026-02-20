@@ -15,6 +15,11 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v4
+        
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libssl-dev --no-install-recommends
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
