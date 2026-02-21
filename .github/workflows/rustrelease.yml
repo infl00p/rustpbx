@@ -32,41 +32,29 @@ jobs:
       - name: Build Binaries
         run: |
           cross build --release --target x86_64-unknown-linux-gnu --features cross
-          cross build --release --target aarch64-unknown-linux-gnu --features cross
+          #cross build --release --target aarch64-unknown-linux-gnu --features cross
           mkdir -p bin/amd64 bin/arm64
           cp target/x86_64-unknown-linux-gnu/release/rustpbx bin/amd64/
           cp target/x86_64-unknown-linux-gnu/release/sipflow bin/amd64/
-          cp target/aarch64-unknown-linux-gnu/release/rustpbx bin/arm64/
-          cp target/aarch64-unknown-linux-gnu/release/sipflow bin/arm64/
+          #cp target/aarch64-unknown-linux-gnu/release/rustpbx bin/arm64/
+          #cp target/aarch64-unknown-linux-gnu/release/sipflow bin/arm64/
 
-      - name: Upload Release Binaries
-        uses: actions/upload-release-asset@v1
+
+
+      - name: Upload amd64 rustpbx to release
+        uses: svenstaro/upload-release-action@v2
         with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./bin/amd64/rustpbx
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ./bin/amd64/rustpbx
           asset_name: rustpbx_amd64
-          asset_content_type: application/octet-stream
-
-      - name: Upload SIPFlow Binaries
-        uses: actions/upload-release-asset@v1
+          tag: ${{ github.ref }}
+          overwrite: true
+          
+      - name: Upload amd64 sipflow to release
+        uses: svenstaro/upload-release-action@v2
         with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./bin/amd64/sipflow
-          asset_name: sipflow_amd64
-          asset_content_type: application/octet-stream
-
-      - name: Upload ARM64 Binaries
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./bin/arm64/rustpbx
-          asset_name: rustpbx_arm64
-          asset_content_type: application/octet-stream
-
-      - name: Upload SIPFlow ARM64 Binaries
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./bin/arm64/sipflow
-          asset_name: sipflow_arm64
-          asset_content_type: application/octet-stream
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ./bin/amd64/sipflow
+          asset_name: sipflow
+          tag: ${{ github.ref }}
+          overwrite: true
