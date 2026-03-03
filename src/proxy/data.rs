@@ -15,6 +15,7 @@ use std::{
 use tracing::info;
 
 use crate::{
+    addons::queue::services::utils as queue_utils,
     config::{ProxyConfig, RecordingPolicy},
     models::{routing, sip_trunk},
     proxy::routing::matcher::RouteResourceLookup,
