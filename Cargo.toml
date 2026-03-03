@@ -63,6 +63,7 @@ minijinja = { version = "2", features = ["loader", "json"], optional = true }
 serde = { version = "1", features = ["derive"] }
 glob = "0.3.3"
 serde_json = "1"
+thiserror = "1"
 tokio = { version = "1.49.0", features = ["full", "tracing"] }
 tokio-stream = { version = "0.1.18", features = ["net", "sync"] }
 tokio-tungstenite = { version = "0.28.0", features = [

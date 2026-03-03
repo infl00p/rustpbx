@@ -4,7 +4,6 @@ use axum::{
     Extension,
     extract::{Json, Path, Query, State},
     response::IntoResponse,
-    Extension,
 };
 use chrono::NaiveDate;
 use sea_orm::{ColumnTrait, EntityTrait, PaginatorTrait, QueryFilter};
